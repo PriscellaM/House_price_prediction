@@ -22,7 +22,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const [type, setType] = useState('');
+  const [type, setType] = useState(1);
   const [rooms, setRooms] = useState('');
   const [bathroom, setBathroom] = useState('');
   const [carspace, setCarspace] = useState('');
@@ -37,37 +37,37 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setpredictedPrice(null);
+    setPredictedPrice(null);
     setLoading(true);
     
     try {
       //Axios call to predict house price based on rooms, buildingArea, type, yearBuilt, bathroom, and carspace
-      const response = await axios.get(`http://localhost:8000/predict/${type}/${rooms}/${bathroom}/${carspace}/${buildingArea}/${regionName}/${yearBuilt}`);
-      setpredictedPrice(response.data.predicted_price);
+      const response = await axios.post(`http://localhost:8000/predict/`, {type, rooms, bathroom, carspace, buildingArea, regionName, yearBuilt});
+      setPredictedPrice(response.data.predicted_price);
 
       //Prepare data for the chart
-      const Rooms = [2, 3, 4, 5, 6];
-      const predictions = await Promise.all(
-        Rooms.map(rooms => 
-          axios.get(`http://localhost:8000/predict/${type}/${rooms}/${bathroom}/${carspace}/${buildingArea}/${regionName}/${yearBuilt}`)
+      const buildingAreas = [50, 100, 150, 200, 250, 300];
+      const preds = await Promise.all(
+        buildingAreas.map(ba => 
+          axios.get(`http://localhost:8000/predict/${type}/${rooms}/${bathroom}/${carspace}/${ba}/${regionName}/${yearBuilt}`)
             .then(res => res.data.predicted_price)
         )
       );
     
       //Creating the chart data using the predictions from the backend
       const newChartData = {
-        labels: rooms, // X-axis labels (rooms)
+        labels: buildingAreas, // X-axis labels (building area)
         datasets: [
           {
             label: 'Predicted Price',
-            data: predictions,  // Y-axis data (predicted prices)
+            data: preds,  // Y-axis data (predicted prices)
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.5)',
             tension: 0.1
           },
           {
             label: 'Your Prediction',
-            data: [{x: parseInt(rooms), y: response.data.predicted_price}],
+            data: [{x: parseInt(buildingArea), y: response.data.predicted_price}],
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
             pointRadius: 8,
