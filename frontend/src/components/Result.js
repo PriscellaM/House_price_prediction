@@ -7,7 +7,7 @@ const Result = ({ predictedPrice, chartData }) => {
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
       <Typography variant="h5" gutterBottom>
-        Predicted Price: {predictedPrice.toLocaleString()}
+        Predicted Price: ${predictedPrice.toLocaleString()}
       </Typography>
       {chartData && (
         <Box sx={{ mt: 3 }}>
@@ -21,7 +21,7 @@ const Result = ({ predictedPrice, chartData }) => {
                 },
                 title: {
                   display: true,
-                  text: 'Price Predictions by Number of Rooms'
+                  text: 'Price Predictions by Building Area'
                 }
               },
               scales: {
@@ -30,7 +30,7 @@ const Result = ({ predictedPrice, chartData }) => {
                   position: 'bottom',
                   title: {
                     display: true,
-                    text: 'Number of Rooms'
+                    text: 'Building Area (sq m)'
                   }
                 },
                 y: {
