@@ -3,11 +3,11 @@ import React from 'react';
 import { Paper, Typography, Box } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 
-const Result = ({ predictedCategory, chartData }) => {
+const Result = ({ predictedPrice, chartData }) => {
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
       <Typography variant="h5" gutterBottom>
-        Predicted Category: {predictedCategory.toLocaleString()}
+        Predicted Price: {predictedPrice.toLocaleString()}
       </Typography>
       {chartData && (
         <Box sx={{ mt: 3 }}>
@@ -21,7 +21,7 @@ const Result = ({ predictedCategory, chartData }) => {
                 },
                 title: {
                   display: true,
-                  text: 'Category Predictions by Number of Rooms'
+                  text: 'Price Predictions by Number of Rooms'
                 }
               },
               scales: {
@@ -36,7 +36,7 @@ const Result = ({ predictedCategory, chartData }) => {
                 y: {
                   title: {
                     display: true,
-                    text: 'Predicted Category'
+                    text: 'Predicted Price ($)'
                   }
                 }
               }
