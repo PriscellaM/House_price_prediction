@@ -1,114 +1,54 @@
+#House Price Prediction Model
+#Group 86 - Liban
+
+#Import Libraries
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.ensemble import RandomForestRegressor
 import joblib
 
-#KNN model
-class KNNmodel:
+#Random Forest Regression Model
+class RFRegModel:
     def __init__(self):
-        # Initialize the model (KNN Classification Model)
-        self.model = KNeighborsClassifier(n_neighbors=13)   #best n neighbors=13 from assignment 2
+        # Initialize the model (random forest regression model)
+        #Using the best parameters found from assignment2
+        self.model = RandomForestRegressor(n_estimators=300,min_samples_split=2, min_samples_leaf=1, max_features='sqrt', max_depth=30)
 
-    def process_and_train(self):
-        #Load the melbourne housing dataset
-        data = pd.read_csv('melbourne_housing.csv')
+    def train(self):
+        #Load the melbourne housing training dataset
+        df = pd.read_csv('processed_melbourne_housing.csv')
 
-        #Delete Duplicates if any
-        data.drop_duplicates(inplace=True)
+        #Separate Features(X) and Price(y)
+        #Features: 'Type', 'Rooms', 'Bathroom', 'Car','BuildingArea', 'Regionname', 'YearBuilt'
+        X = df.drop(columns=['Price'])  # Remove the house price column and keep the features
+        y = df['Price']  # Take the house price as the target value
 
-
-        #FILTERING DATA
-        #Drop unused columns
-        data.drop(columns=['CouncilArea', 'Bedroom2', 'Suburb', 'Postcode', 'Propertycount', 'SellerG', 'Method', 'Date', 'Address'], inplace=True)
-
-        #Only want data with Regionname = Southern Metropolitan
-        data = data[data['Regionname'] == 'Southern Metropolitan']
-
-        #Delete rows with missing values
-        data.dropna(subset=['Car'], inplace=True)
-        data.dropna(subset=['BuildingArea'], inplace=True)
-
-        #Fill missing values for YearBuilt using median
-        data['YearBuilt'].fillna(data['YearBuilt'].median(), inplace=True)
-
-        #Removing outliers function using IQR
-        def remove_outliers_IQR(data, column):
-            # Calculate Q1 and Q3
-            Q1 = data[column].quantile(0.25)
-            Q3 = data[column].quantile(0.75)
-
-            # Calculate IQR
-            IQR = Q3 - Q1
-
-            # Calculate lower and upper bounds
-            lower_bound = Q1 - 1.5 * IQR
-            upper_bound = Q3 + 1.5 * IQR
-
-            #Handling outliers, by removing data entries with Building area outside the lower and upper bound
-            filtered_data = data[(data[column] >= lower_bound) & (data[column] <= upper_bound)]
-
-            return filtered_data
-
-        #Remove Outliers
-        data = remove_outliers_IQR(data, 'BuildingArea')
-        data = remove_outliers_IQR(data, 'Car')
-        data = remove_outliers_IQR(data, 'Rooms')
-        data = remove_outliers_IQR(data, 'Bathroom')
-        data = remove_outliers_IQR(data, 'Price')
-
-
-        #DATA TRANSFORMATION
-        #Affordable vs Expensive House Category
-        #Define threshold based on median price
-        price_threshold = data['Price'].median()
-        #Create a new column 'Price_Category' where: 0 is Affordable, 1 is Expensive
-        data['Price_Category'] = data['Price'].apply(lambda x: 0 if x <= price_threshold else 1)
-
-        #Mapping 'Type': unit - 1, townhouse - 2, house - 3
-        type_mapping = {'u': 1,'t': 2,'h': 3}
-        data['Type'] = data['Type'].map(type_mapping)
-
-        #Selected features are: 'Rooms', 'BuildingArea', 'Type', 'YearBuilt', 'Bathroom', 'Car'
-        #Therefore, drop features that are not selected
-        data.drop(columns=['Landsize', 'Lattitude', 'Distance', 'Longtitude', 'Regionname'], inplace=True)
-
-        #Save processed dataset
-        data.to_csv('processed_melbourne_housing.csv', index=False)
-
-        
-        #DATA SPLITTING
-        features = ['Rooms', 'BuildingArea', 'Type', 'YearBuilt', 'Bathroom', 'Car'] #features selected
-        X = data[features]   
-        y = data['Price_Category']  # Target variable
-
-        # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-        #Scale Data
-        scaler = MinMaxScaler()
-        X_train_scaled = scaler.fit_transform(X_train)  # Scale the training set
+        #Scale Training Data
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
 
         #TRAIN
         #Train the model
-        self.model.fit(X_train_scaled, y_train)
+        self.model.fit(X_scaled, y)
 
         #Save the model
-        joblib.dump(self.model, 'KNNmodel.pkl')
+        joblib.dump(self.model, 'RFRegModel.pkl')
 
         #Evaluation
-        predictions = self.model.predict(X_train_scaled)
-        print('KNN\n',classification_report(y_train, predictions))
+        predictions = self.model.predict(X_scaled)
+        mse = mean_squared_error(y, predictions)
+        r2 = r2_score(y, predictions)
+        print(f'Model trained. MSE: {mse:.2f}, R²: {r2:.2f}')
 
-    def predict(self, rooms, buildingArea, type, yearBuilt, bathroom, carspace):
+    def predict(self, type, rooms, bathroom, carspace, buildingArea, regionName, yearBuilt):
         #Load the model
-        model = joblib.load('KNNmodel.pkl')
+        model = joblib.load('RFRegModel.pkl')
 
         #Make prediction based on input
-        return model.predict([[rooms, buildingArea, type, yearBuilt, bathroom, carspace]])
-    
-#Example usage for initial training
+        return model.predict([[type, rooms, bathroom, carspace, buildingArea, regionName, yearBuilt]])
+
+#For initial training
 if __name__ == "__main__":
-    model = KNNmodel()
-    model.process_and_train()
+    model = RFRegModel()
+    model.train()
