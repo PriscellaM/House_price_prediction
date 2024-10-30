@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, conint, confloat, ValidationError
 from typing import Literal
 from model import RFRegModel
+from utils import logger
 
 app = FastAPI()
 
@@ -32,6 +33,7 @@ class prediction_input(BaseModel):
 async def root():
     return {"message": "Welcome to the Melbourne House Price Prediction API"}
 
+#GET endpoint for prediction
 @app.get("/predict/{type}/{rooms}/{bathroom}/{carspace}/{buildingArea}/{regionName}/{yearBuilt}")
 async def predict_price(type: int, rooms: int, bathroom: int, carspace: int, buildingArea: float, regionName: int, yearBuilt: int):
     #Type, where: Unit - 1, House - 2, Townhouse - 3
@@ -39,14 +41,24 @@ async def predict_price(type: int, rooms: int, bathroom: int, carspace: int, bui
     price = int(model.predict(type, rooms, bathroom, carspace, buildingArea, regionName, yearBuilt)[0])
     return {"predicted_price": price}
 
-# @app.post("/predict/")
-# async def predict_category(input: prediction_input):
-#     try:
-#         price = int(model.predict(input.rooms, input.buildingArea, input.type, 
-#                                       input.yearBuilt, input.bathroom, input.carspace)[0])
-#         return {"predicted_category": price}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+#POST endpoint for prediction
+@app.post("/predict/")
+async def predict_price(input: prediction_input):
+    try:
+        #Call the machine learming model predict function to get the predicted price
+        price = int(model.predict(input.type, input.rooms, input.bathroom, input.carspace, input.buildingArea, input.regionName, input.yearBuilt)[0])
+        
+        #Log the prediction details(price, type, rooms, bathroom, carspace, buildingArea, regionName, and yearBuilt)
+        logger.info(f"Prediction made: {price} for {input.type} type, {input.bedrooms} rooms, {input.bathroom} bathrooms, {input.carspace} carspace, {input.buildingArea} sq m, {input.regionName} region, {input.bedrooms} yearBuilt")
+
+        #return the predicted price in a dict (JSON response)
+        return {"predicted_price": price}
+    except Exception as e:
+        #Log the error if exception occurs during prediction
+        logger.error(f'Error during prediction: {str(e)}')
+
+        #Raise HTTP 500 internal server error if prediction failed
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
