@@ -45,11 +45,11 @@ async def predict_price(type: int, rooms: int, bathroom: int, carspace: int, bui
 @app.post("/predict/")
 async def predict_price(input: prediction_input):
     try:
-        #Call the machine learming model predict function to get the predicted price
+        #Call the machine learning model predict function to get the predicted price
         price = int(model.predict(input.type, input.rooms, input.bathroom, input.carspace, input.buildingArea, input.regionName, input.yearBuilt)[0])
         
         #Log the prediction details(price, type, rooms, bathroom, carspace, buildingArea, regionName, and yearBuilt)
-        logger.info(f"Prediction made: {price} for {input.type} type, {input.bedrooms} rooms, {input.bathroom} bathrooms, {input.carspace} carspace, {input.buildingArea} sq m, {input.regionName} region, {input.bedrooms} yearBuilt")
+        logger.info(f"Prediction made: {price} for {input.type} type, {input.rooms} rooms, {input.bathroom} bathrooms, {input.carspace} carspace, {input.buildingArea} sq m, {input.regionName} region, {input.yearBuilt} yearBuilt")
 
         #return the predicted price in a dict (JSON response)
         return {"predicted_price": price}
