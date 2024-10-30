@@ -109,7 +109,7 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
             fullWidth
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : 'Predict Category'}
+            {loading ? <CircularProgress size={24} /> : 'Predict Price'}
           </Button>
         </Grid>
       </Grid>
