@@ -105,11 +105,11 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
           <Button 
             type="submit" 
             variant="contained" 
-            color="primary" 
+            color="secondary" 
             fullWidth
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : 'Predict Price'}
+            {loading ? <CircularProgress size={10} /> : 'Predict Price'}
           </Button>
         </Grid>
       </Grid>
