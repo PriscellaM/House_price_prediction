@@ -8,15 +8,15 @@ export const createBuildingAreaChartData = (buildingAreas, predsBA, buildingArea
             {
                 label: 'Predicted Price',
                 data: predsBA,  // Y-axis data (predicted prices for Building area)
-                borderColor: '#44195e', //dark orange
-                backgroundColor: '#44195e', //dark orange
+                borderColor: '#44195e', //purple color
+                backgroundColor: '#44195e', //purple color
                 tension: 0.1
             },
             {
                 label: 'Your Prediction',
                 data: [{x: parseInt(buildingArea), y: predictedPrice}],
-                borderColor: '#fc6601', //dark orange
-                backgroundColor: '#fc6601', //dark orange
+                borderColor: '#fc6601', //dark orange color
+                backgroundColor: '#fc6601', //dark orange color
                 pointRadius: 8,
                 pointHoverRadius: 12,
                 showLine: false //Show only the point for the user's prediction
@@ -36,9 +36,9 @@ export const createTypesChartData = (types, predsT, type, predictedPrice2) => {
                 label: 'Predicted Price',
                 data: predsT, // Y-axis data (predicted prices for each type)
                 backgroundColor: [
-                    '#41c7e1', // Color for 1 - Unit
-                    '#f7a74c', // Color for 2 - House
-                    '#fc6601'  // Color for 3 - Townhouse
+                    '#ef955d', // light brown color for 1 - Unit
+                    '#bcbcbb', // grey color color for 2 - House
+                    '#44195e'  // purple color for 3 - Townhouse
                 ],
                 borderColor: '#000',
                 borderWidth: 1

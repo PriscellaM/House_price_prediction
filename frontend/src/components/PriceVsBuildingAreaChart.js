@@ -1,7 +1,9 @@
 // src/components/PriceVsBuildingAreaChart.js
-import React, { useRef } from 'react';
-import {  Button, Box } from '@mui/material';
-import { Line } from 'react-chartjs-2';
+// Using chart.js to create line chart
+
+import React, { useRef } from 'react';   //Import React components
+import {  Button, Box } from '@mui/material';   //Import MUI components
+import { Line } from 'react-chartjs-2';   //Import chart.js for the chart
 import 'chartjs-plugin-zoom'; //Import zoom plugin
 
 //Register the plugin with Chart.js
@@ -43,6 +45,7 @@ const PriceVsBuildingAreaChart = ({ chartData }) => {
                   display: true,
                   text: 'Price Predictions by Building Area',
                   color: '#010101', //Title color (black)
+                  font: { size: 18, },
                 },
                 zoom: {
                   pan: {
@@ -69,9 +72,11 @@ const PriceVsBuildingAreaChart = ({ chartData }) => {
                     display: true,
                     text: 'Building Area (sq m)',
                     color: '#010101', //x-axis title color (black)
+                    font: { size: 16, },
                   },
                   ticks: {
                     color: '#010101', //y-axis ticks color (black)
+                    font: { size: 12.5, },
                   },
                 },
                 y: {
@@ -79,14 +84,17 @@ const PriceVsBuildingAreaChart = ({ chartData }) => {
                     display: true,
                     text: 'Predicted Price ($)',
                     color: '#010101', //y-axis title color (black)
+                    font: { size: 16, },
                   },
                   ticks: {
                     color: '#010101', //y-axis ticks color (black)
+                    font: { size: 12.5, },
                   },
                 },
               },
             }}
           />
+          {/*Reset Zoom button to reset the chart back to the original*/}
           <Button onClick={handleResetZoom} color='secondary' variant='contained' size='small' sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
             Reset Zoom
           </Button>

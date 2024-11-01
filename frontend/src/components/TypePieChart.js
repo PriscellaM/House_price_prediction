@@ -1,7 +1,9 @@
 // src/components/TypePieChart.js
-import React, { useEffect, useState } from 'react';
-import Plot from 'react-plotly.js';
-import { Box, useTheme, useMediaQuery } from '@mui/material';
+// Using plotly to create pie chart
+
+import React, { useEffect, useState } from 'react'; //Import react components
+import Plot from 'react-plotly.js';   //Import plotly for the chart
+import { Box, useTheme, useMediaQuery } from '@mui/material';   //Import MUI components
 
 const TypePieChart = () => {
   const [data, setData] = useState([]);
@@ -30,7 +32,7 @@ const TypePieChart = () => {
     textinfo: 'label+percent', // Show label and percentage in the pie slice
     hoverinfo: 'label+percent+value', //Tooltip showing label, percentage, and value on hover
     marker: {
-      colors: ['#44195e', '#fc6601', '#bcbcbc'], //colors for pie chart: purple, orange, grey
+      colors: ['#44195e', '#fc6601', '#bcbcbb'], //colors for pie chart: purple, orange, grey
     },
   };
 
@@ -48,11 +50,11 @@ const TypePieChart = () => {
       <Plot
         data={[chartData]}
         layout={{
-          title: 'Property Type Distribution',
+          title: '<b>Property Type Distribution</b>',
           height: plotHeight, // Adjust height for better visibility
           width: plotWidth, // Use full width of the container
-          showlegend: true,
-          hovermode: 'closest',
+          showlegend: true, //show legend
+          hovermode: 'closest', //hovermode set to closest
           margin: { t: 40, b: 40, l: 40, r: 40 }, // Add margins for better spacing
         }}
         config={{ 

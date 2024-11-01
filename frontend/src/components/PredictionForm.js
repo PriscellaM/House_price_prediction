@@ -1,11 +1,32 @@
 // src/components/PredictionForm.js
 import React from 'react';
-import { TextField, FormControl, Select, MenuItem, InputLabel, InputAdornment, Button, Grid, CircularProgress } from '@mui/material';
+import { TextField, FormControl, Select, MenuItem, InputLabel, InputAdornment, Button, Grid, CircularProgress, FormHelperText  } from '@mui/material';
 
-const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom, carspace, setCarspace, buildingArea, setBuildingArea, regionName, setRegionName, yearBuilt, setYearBuilt, handleSubmit, loading }) => {
+const PredictionForm = ({ 
+  type, setType, 
+  rooms, setRooms, 
+  bathroom, setBathroom, 
+  carspace, setCarspace, 
+  buildingArea, setBuildingArea, 
+  regionName, setRegionName, 
+  yearBuilt, setYearBuilt, 
+  handleSubmit, loading 
+}) => {
+  
+  // Function to handle numeric input validation
+  const handleNumberInput = (setter) => (event) => {
+    const value = event.target.value;
+    
+    //Allow only digits or empty input
+    if (/^\d*$/.test(value) || value === '') {
+      setter(value);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
+        {/* Property Type Selection */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth variant="outlined">
             <InputLabel>Property Type</InputLabel>
@@ -19,8 +40,11 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
               <MenuItem value={2}>House</MenuItem>
               <MenuItem value={3}>Townhouse</MenuItem>
             </Select>
+            <FormHelperText>Please select one.</FormHelperText> {/* Added helper text */}
           </FormControl>
         </Grid>
+
+        {/* Number of Rooms Input */}
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -28,21 +52,27 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
             label="Number of Rooms"
             variant="outlined"
             value={rooms}
-            onChange={(e) => setRooms(e.target.value)}
+            onInput={handleNumberInput(setRooms)}
             required
+            helperText="Please enter numbers only."
           />
         </Grid>
+
+        {/* Number of Bathrooms Input */}
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="number"
-            label="Number of Bathroom"
+            label="Number of Bathrooms"
             variant="outlined"
             value={bathroom}
-            onChange={(e) => setBathroom(e.target.value)}
+            onInput={handleNumberInput(setBathroom)}
             required
+            helperText="Please enter numbers only."
           />
         </Grid>
+
+        {/* Number of Carspaces Input */}
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -50,26 +80,30 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
             label="Number of Carspace"
             variant="outlined"
             value={carspace}
-            onChange={(e) => setCarspace(e.target.value)}
+            onInput={handleNumberInput(setCarspace)}
             required
+            helperText="Please enter numbers only."
           />
         </Grid>
+
+        {/* Building Area Input */}
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="number"
             label="Building Area"
             variant="outlined"
-            slotProps={{
-                input: {
-                  endAdornment: <InputAdornment position="start">sq m</InputAdornment>,
-                },
+            InputProps={{
+              endAdornment: <InputAdornment position="end">sq m</InputAdornment>,
             }}
             value={buildingArea}
-            onChange={(e) => setBuildingArea(e.target.value)}
+            onInput={handleNumberInput(setBuildingArea)}
             required
+            helperText="Please enter numbers only."
           />
         </Grid>
+
+        {/* Region Selection */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth variant="outlined">
             <InputLabel>Region</InputLabel>
@@ -88,8 +122,11 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
               <MenuItem value={7}>Eastern Metropolitan</MenuItem>
               <MenuItem value={8}>Southern Metropolitan</MenuItem>
             </Select>
+            <FormHelperText>Please select one.</FormHelperText> {/* Added helper text */}
           </FormControl>
         </Grid>
+
+        {/* Year Built Input */}
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -97,17 +134,20 @@ const PredictionForm = ({ type, setType, rooms, setRooms, bathroom, setBathroom,
             label="Year Built"
             variant="outlined"
             value={yearBuilt}
-            onChange={(e) => setYearBuilt(e.target.value)}
+            onInput={handleNumberInput(setYearBuilt)}
             required
+            helperText="Please enter numbers only."
           />
         </Grid>
+
+        {/* Submit Button */}
         <Grid item xs={12}>
           <Button 
             type="submit" 
             variant="contained" 
             color="secondary" 
             fullWidth
-            disabled={loading}
+            disabled={loading} // Disable button while loading
           >
             {loading ? <CircularProgress size={10} /> : 'Predict Price'}
           </Button>
