@@ -3,8 +3,6 @@
 
 #Import Libraries
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 import joblib
@@ -40,7 +38,7 @@ class RFRegModel:
         json_data = type_percentage.to_json(orient='records')
 
         #Define the path to save the JSON file
-        output_path = '../frontend/public/type_percentage.json'
+        output_path = '../frontend/public/type_percentage.json'     #save to 'public' folder inside the 'frontend' folder
 
         #Create the directory if it doesn't exist
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -49,7 +47,7 @@ class RFRegModel:
         with open(output_path, 'w') as json_file:
             json.dump(json.loads(json_data), json_file, indent=4)
 
-        #Print confirmation message
+        #Print confirmation message to check the json file data
         print(f"JSON data saved to '{output_path}'")
 
     def train(self):
